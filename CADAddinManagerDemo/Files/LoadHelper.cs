@@ -123,7 +123,7 @@ namespace CADAddinManagerDemo
         {
             var tempAssembly = Assembly.Load(File.ReadAllBytes(tempPath));
             Type attributeType = typeof(CommandMethodAttribute);
-            
+
             // 获取所有带有指定特性的方法
             var methodsWithAttribute = tempAssembly
                 .GetTypes()
