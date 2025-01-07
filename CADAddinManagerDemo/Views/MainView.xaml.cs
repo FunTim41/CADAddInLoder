@@ -26,5 +26,7 @@ namespace CADAddinManagerDemo
             InitializeComponent();
             this.DataContext = new MainViewModel();
         }
+
+       
     }
 }

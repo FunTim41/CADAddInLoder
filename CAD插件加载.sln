@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CADAddinManagerDemo", "CADAddinManagerDemo\CADAddinManagerDemo.csproj", "{1648006E-D5C0-454A-A3EC-538BC3D00B9D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloCad", "HelloCad\HelloCad.csproj", "{4C10D7EA-92D9-421E-8C67-1720F9EFDB6E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{1648006E-D5C0-454A-A3EC-538BC3D00B9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1648006E-D5C0-454A-A3EC-538BC3D00B9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1648006E-D5C0-454A-A3EC-538BC3D00B9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C10D7EA-92D9-421E-8C67-1720F9EFDB6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C10D7EA-92D9-421E-8C67-1720F9EFDB6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C10D7EA-92D9-421E-8C67-1720F9EFDB6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C10D7EA-92D9-421E-8C67-1720F9EFDB6E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

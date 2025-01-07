@@ -74,5 +74,6 @@ namespace CADAddinManagerDemo
             MainView mainView = new MainView();
             mainView.Show();
         }
+       
     }
 }
