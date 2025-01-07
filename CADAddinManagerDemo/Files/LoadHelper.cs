@@ -33,6 +33,15 @@ namespace CADAddinManagerDemo
             get { return addInOriginalPath; }
         }
 
+        private static List<Assembly> addInsDll=new();
+        /// <summary>
+        /// 已加载的Dll
+        /// </summary>
+        public static List<Assembly> AddInsDll
+        {
+            get { return addInsDll; }           
+        }
+
         /// <summary>
         /// 把VS生成的插件所在的整个文件夹复制到临时文件夹中新建的CADAddinManager文件夹下,
         /// 并返回临时文件夹下的插件路径,
@@ -144,7 +153,12 @@ namespace CADAddinManagerDemo
             string name
         )
         {
-            var tempAssembly = Assembly.Load(File.ReadAllBytes(tempPath));
+            var tempAssembly = Assembly.Load(File.ReadAllBytes( tempPath));
+            if (addInsDll.Contains(tempAssembly))
+            {//把旧的移除
+                addInsDll.Remove(tempAssembly);
+            }
+            addInsDll.Add(tempAssembly);
             Type attributeType = typeof(CommandMethodAttribute);
             List<MethodInfo> methodsWithAttribute = new List<MethodInfo>();
             ObservableCollection<MethodTree> methods = new ObservableCollection<MethodTree>();
@@ -162,6 +176,7 @@ namespace CADAddinManagerDemo
                         method.ClassName = dllmethod.DeclaringType.Namespace+"."+ dllmethod.DeclaringType.Name;
                         method.DllName = name;
                         method.tempPath= tempPath;
+                        method.assembly= tempAssembly;
                         methods.Add(method);
                     }
                 }

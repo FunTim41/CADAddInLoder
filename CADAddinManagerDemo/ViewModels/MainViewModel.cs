@@ -97,9 +97,11 @@ namespace CADAddinManagerDemo.ViewModels
                 CommandTree command = Commands.First(i =>
                     i.Name == Path.GetFileName(addInTempPath)
                 );
+                command.Name = Path.GetFileName(addInTempPath);
+                command.OriPath = AddInOriginalPath;
                 command.CommandMethodNames = LoadHelper.LoadAddinMethods(
                     addInTempPath,
-                    commandTree.Name
+                    command.Name
                 );
             }
             else
@@ -202,7 +204,7 @@ namespace CADAddinManagerDemo.ViewModels
             }
             try
             {
-                var targetAssembly = Assembly.Load(File.ReadAllBytes(CurrentCommand.tempPath)); 
+                var targetAssembly = CurrentCommand.assembly; 
                 var targetType = targetAssembly.GetType(CurrentCommand.ClassName);
                 var targetMethod = targetType.GetMethod(CurrentCommand.Name);
                 var targetObject = Activator.CreateInstance(targetType);
