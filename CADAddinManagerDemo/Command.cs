@@ -16,6 +16,10 @@ namespace CADAddinManagerDemo
 {
     public class Command
     {
+        /// <summary>
+        /// 创建UI
+        /// </summary>
+        /// <exception cref="System.Exception"></exception>
         [CommandMethod("AddInManagerByFT")]
         public void BuildMyPopMenu()
         {
@@ -27,7 +31,9 @@ namespace CADAddinManagerDemo
                 //这里可以写文件路径或者仅写文件名
                 //如果仅写文件名，则最后保存时将默认保存在此程序集DLL所在目录
                 //如果写文件路径，则会按路径进行保存
-                string strCuiFileName = "AddInManagerByFT.cui";
+                string projectPath =
+                    "E:\\★★★AUTOCAD.NET\\CAD2024\\CAD插件加载\\CADAddinManagerDemo\\bin\\Debug";
+                string strCuiFileName = Path.Combine(projectPath, "AddInManagerByFT.cui");
 
                 //创建一个自定义组（这个组中将包含我们自定义的命令、菜单、工具栏、面板等）
                 CustomizationSection myCSection = new CustomizationSection();
@@ -74,6 +80,5 @@ namespace CADAddinManagerDemo
             MainView mainView = new MainView();
             mainView.Show();
         }
-       
     }
 }

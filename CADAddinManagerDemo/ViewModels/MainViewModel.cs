@@ -178,9 +178,13 @@ namespace CADAddinManagerDemo.ViewModels
                 CurrentAddinDll = selectedItem as CommandTree;
             }
             //删除操作会自动触发SelectedItemChanged事件
-            if (CurrentAddinDll!=null)
+            if (CurrentAddinDll!=null|| CurrentCommand != null)
             {
                 AddInOriginalPath = CurrentAddinDll.OriPath;
+            }
+            else
+            {
+                AddInOriginalPath = null;
             }
            
         }
@@ -198,7 +202,7 @@ namespace CADAddinManagerDemo.ViewModels
             }
             try
             {
-                var targetAssembly = Assembly.Load(File.ReadAllBytes(CurrentCommand.tempPath));
+                var targetAssembly = Assembly.Load(File.ReadAllBytes(CurrentCommand.tempPath)); 
                 var targetType = targetAssembly.GetType(CurrentCommand.ClassName);
                 var targetMethod = targetType.GetMethod(CurrentCommand.Name);
                 var targetObject = Activator.CreateInstance(targetType);
