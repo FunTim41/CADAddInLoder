@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -23,7 +24,7 @@ namespace CADAddinManagerDemo.ViewModels
         /// CAD的Dll插件原路径
         /// </summary>
         [ObservableProperty]
-        string addInOriginalPath;
+        string addInOriginalPath = null;
 
         /// <summary>
         /// CAD的Dll插件临时文件路径
@@ -64,8 +65,10 @@ namespace CADAddinManagerDemo.ViewModels
         {
             try
             {
-                LoadHelper.CopyToTemp();
-                LoadAddinToTreeView();
+                if (LoadHelper.SelectFile())
+                {
+                    LoadAddinToTreeView();
+                }
             }
             catch (Exception ex)
             {
@@ -76,45 +79,45 @@ namespace CADAddinManagerDemo.ViewModels
         private void LoadAddinToTreeView()
         {
             CommandTree commandTree = new CommandTree();
-            AddInOriginalPath = LoadHelper.AddInOriginalPath;
+            string originalPath = LoadHelper.AddInOriginalPath;
             addInTempPath = LoadHelper.AddInTempPath;
-            if (!TempFiles.Instance.AddinsTempFiles.Exists(i => i == AddInOriginalPath))
+            if (!TempFiles.Instance.AddinsTempFiles.Exists(i => i == originalPath))
             { //如果不存在该地址
-                TempFiles.Instance.AddinsTempFiles.Add(AddInOriginalPath);
+                TempFiles.Instance.AddinsTempFiles.Add(originalPath);
             }
             if (Commands.Count == 0)
             {
-                commandTree.Name = Path.GetFileName(addInTempPath);
-                commandTree.OriPath = AddInOriginalPath;
-                commandTree.CommandMethodNames = LoadHelper.LoadAddinMethods(
-                    addInTempPath,
-                    commandTree.Name
-                );
-                Commands.Add(commandTree);
+                Commands.Add(CreateTree(commandTree, originalPath));
             }
             else if (Commands.Exists(i => i.Name == Path.GetFileName(addInTempPath)))
             {
                 CommandTree command = Commands.First(i =>
                     i.Name == Path.GetFileName(addInTempPath)
                 );
-                command.Name = Path.GetFileName(addInTempPath);
-                command.OriPath = AddInOriginalPath;
-                command.CommandMethodNames = LoadHelper.LoadAddinMethods(
-                    addInTempPath,
-                    command.Name
-                );
+                CreateTree(commandTree, originalPath);
             }
             else
             {
-                commandTree.Name = Path.GetFileName(addInTempPath);
-                commandTree.OriPath = AddInOriginalPath;
-                commandTree.CommandMethodNames = LoadHelper.LoadAddinMethods(
-                    addInTempPath,
-                    commandTree.Name
-                );
-                Commands.Add(commandTree);
+                Commands.Add(CreateTree(commandTree, originalPath));
             }
             CommandsTrees.Refresh();
+        }
+
+        /// <summary>
+        /// 给节点添加内容
+        /// </summary>
+        /// <param name="commandTree"></param>
+        /// <param name="originalPath"></param>
+        /// <returns></returns>
+        private CommandTree CreateTree(CommandTree commandTree, string originalPath)
+        {
+            commandTree.Name = Path.GetFileName(addInTempPath);
+            commandTree.OriPath = originalPath;
+            commandTree.CommandMethodNames = LoadHelper.LoadAddinMethods(
+                addInTempPath,
+                commandTree.Name
+            );
+            return commandTree;
         }
 
         /// <summary>
@@ -180,7 +183,7 @@ namespace CADAddinManagerDemo.ViewModels
                 CurrentAddinDll = selectedItem as CommandTree;
             }
             //删除操作会自动触发SelectedItemChanged事件
-            if (CurrentAddinDll!=null|| CurrentCommand != null)
+            if (CurrentAddinDll != null || CurrentCommand != null)
             {
                 AddInOriginalPath = CurrentAddinDll.OriPath;
             }
@@ -188,7 +191,6 @@ namespace CADAddinManagerDemo.ViewModels
             {
                 AddInOriginalPath = null;
             }
-           
         }
 
         /// <summary>
@@ -204,7 +206,7 @@ namespace CADAddinManagerDemo.ViewModels
             }
             try
             {
-                var targetAssembly = CurrentCommand.assembly; 
+                var targetAssembly = CurrentCommand.assembly;
                 var targetType = targetAssembly.GetType(CurrentCommand.ClassName);
                 var targetMethod = targetType.GetMethod(CurrentCommand.Name);
                 var targetObject = Activator.CreateInstance(targetType);
@@ -217,6 +219,7 @@ namespace CADAddinManagerDemo.ViewModels
                 MessageBox.Show(ex.ToString(), "Tips");
             }
         }
+
         /// <summary>
         /// 在关闭前保存当前以加载的dll的地址
         /// </summary>

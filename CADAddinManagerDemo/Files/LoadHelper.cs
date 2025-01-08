@@ -33,13 +33,14 @@ namespace CADAddinManagerDemo
             get { return addInOriginalPath; }
         }
 
-        private static List<Assembly> addInsDll=new();
+        private static List<Assembly> addInsDll = new();
+
         /// <summary>
         /// 已加载的Dll
         /// </summary>
         public static List<Assembly> AddInsDll
         {
-            get { return addInsDll; }           
+            get { return addInsDll; }
         }
 
         /// <summary>
@@ -47,7 +48,7 @@ namespace CADAddinManagerDemo
         /// 并返回临时文件夹下的插件路径,
         /// 与原文件夹下的插件路径
         /// </summary>
-        public static void CopyToTemp()
+        public static bool SelectFile()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "DLL文件|*.dll";
@@ -57,14 +58,28 @@ namespace CADAddinManagerDemo
             openFileDialog.Title = "选择插件文件";
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                CopyToTempByOripath(openFileDialog.FileName);
+                //移除这个之后再加载这个，就会报无法找到资源。估计是和删除临时文件夹有关
+                if (
+                    Path.GetFileNameWithoutExtension(openFileDialog.FileName)
+                    == "CADAddinManagerDemo"
+                )
+                {
+                    return false;
+                }
+                if (openFileDialog.FileName != null)
+                {
+                    CopyToTempByOripath(openFileDialog.FileName);
+                    return true;
+                }
             }
+            return false;
         }
+
         /// <summary>
         /// 从原文件夹复制到临时文件夹
         /// </summary>
         /// <param name="Oripath"></param>
-    public  static  void CopyToTempByOripath( string Oripath)
+        public static void CopyToTempByOripath(string Oripath)
         {
             // 获取用户临时文件夹路径
             string userTempPath = System.IO.Path.GetTempPath();
@@ -76,14 +91,7 @@ namespace CADAddinManagerDemo
             {
                 Directory.CreateDirectory(newFolderPath);
             }
-            else
-            {
-                DateTime newTime = DateTime.Now;
-                // 更新文件夹的创建时间、访问时间和修改时间
-                Directory.SetCreationTime(newFolderPath, newTime);
-                Directory.SetLastAccessTime(newFolderPath, newTime);
-                Directory.SetLastWriteTime(newFolderPath, newTime);
-            }
+
             //CAD插件路径
             addInOriginalPath = Oripath;
             //插件全名
@@ -118,7 +126,7 @@ namespace CADAddinManagerDemo
         /// 清空文件夹
         /// </summary>
         /// <param name="folderPath">需要清空的文件夹</param>
-       public static void ClearFolder(string folderPath)
+        public static void ClearFolder(string folderPath)
         {
             try
             {
@@ -126,13 +134,12 @@ namespace CADAddinManagerDemo
                 //foreach (string file in Directory.GetFiles(folderPath))
                 //{
                 //    File.Delete(file);
-                    
+
                 //}
                 // 删除文件夹中的所有子文件夹
                 foreach (string subFolder in Directory.GetDirectories(folderPath))
                 {
                     Directory.Delete(subFolder, true);
-                    
                 }
             }
             catch (System.Exception ex)
@@ -153,9 +160,9 @@ namespace CADAddinManagerDemo
             string name
         )
         {
-            var tempAssembly = Assembly.Load(File.ReadAllBytes( tempPath));
+            var tempAssembly = Assembly.Load(File.ReadAllBytes(tempPath));
             if (addInsDll.Contains(tempAssembly))
-            {//把旧的移除
+            { //把旧的移除
                 addInsDll.Remove(tempAssembly);
             }
             addInsDll.Add(tempAssembly);
@@ -173,15 +180,16 @@ namespace CADAddinManagerDemo
                     { //得到方法名，所属的类名
                         MethodTree method = new MethodTree();
                         method.Name = dllmethod.Name;
-                        method.ClassName = dllmethod.DeclaringType.Namespace+"."+ dllmethod.DeclaringType.Name;
+                        method.ClassName =
+                            dllmethod.DeclaringType.Namespace + "." + dllmethod.DeclaringType.Name;
                         method.DllName = name;
-                        method.tempPath= tempPath;
-                        method.assembly= tempAssembly;
+                        method.tempPath = tempPath;
+                        method.assembly = tempAssembly;
                         methods.Add(method);
                     }
                 }
             }
-            
+
             return methods;
         }
     }

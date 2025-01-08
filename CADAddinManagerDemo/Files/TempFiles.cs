@@ -47,17 +47,28 @@ namespace CADAddinManagerDemo.Files
             {
                 return;
             }
-           var list= AddinsTempFiles.Distinct().ToList();
+            var list = AddinsTempFiles.Distinct().ToList();
             string folderPath = Path.GetTempPath();
             string filePath = Path.Combine(folderPath, pathFile);
-            try 
+            try
             {
                 // 确保文件可以被写入
-                using (FileStream fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                using (
+                    FileStream fs = new FileStream(
+                        filePath,
+                        FileMode.Create,
+                        FileAccess.Write,
+                        FileShare.None
+                    )
+                )
                 using (StreamWriter writer = new StreamWriter(fs))
                 {
                     foreach (string line in list)
                     {
+                        if (string.IsNullOrEmpty(line))
+                        {
+                            continue;
+                        }
                         writer.WriteLine(line);
                     }
                 }
@@ -73,11 +84,20 @@ namespace CADAddinManagerDemo.Files
         {
             try
             {
-                string folderPath = Path.GetTempPath();
-                string filePath = Path.Combine(folderPath, pathFile);
+                string filePath = Path.Combine(Path.GetTempPath(), pathFile);
+                List<string> list = new List<string>();
+
+                using (StreamReader sr = new StreamReader(filePath))
+                {
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        list.Add(line);
+                    }
+                }
 
                 // 读取文件的所有行并存储到List中
-                AddinsTempFiles = new List<string>(File.ReadAllLines(filePath));
+                AddinsTempFiles = list;
             }
             catch (Exception ex)
             {

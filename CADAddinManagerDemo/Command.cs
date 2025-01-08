@@ -92,6 +92,10 @@ namespace CADAddinManagerDemo
         [CommandMethod("InitAddIn")]
         public void InitializeAddIn()
         {
+            try
+            {
+
+           
             BuildMyPopMenu();
             //加载ui
             Application.LoadPartialMenu(strCuiFilePath);
@@ -99,6 +103,12 @@ namespace CADAddinManagerDemo
             Application.ReloadAllMenus();
             MessageBox.Show("初始化成功！");
             ShowAddInManager();
+            }
+            catch (System.Exception ex)
+            {
+
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         
