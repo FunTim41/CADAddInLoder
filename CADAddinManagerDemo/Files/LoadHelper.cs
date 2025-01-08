@@ -123,11 +123,11 @@ namespace CADAddinManagerDemo
             try
             {
                 // 删除文件夹中的所有文件
-                foreach (string file in Directory.GetFiles(folderPath))
-                {
-                    File.Delete(file);
+                //foreach (string file in Directory.GetFiles(folderPath))
+                //{
+                //    File.Delete(file);
                     
-                }
+                //}
                 // 删除文件夹中的所有子文件夹
                 foreach (string subFolder in Directory.GetDirectories(folderPath))
                 {

@@ -13,7 +13,7 @@ namespace HelloCad
         [CommandMethod("HelloCAD")]
         public void NewCommand()
         {
-            MessageBox.Show("Hello,Revit！！！");
+           
             MessageBox.Show("Hello,CAD！！！");
         }
     }

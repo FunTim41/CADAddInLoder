@@ -3,19 +3,30 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.Customization;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
 using Autodesk.AutoCAD.Runtime;
+using HandyControl.Controls;
+using Application = Autodesk.AutoCAD.ApplicationServices.Application;
+using MessageBox = System.Windows.MessageBox;
 
 namespace CADAddinManagerDemo
 {
     public class Command
     {
+        static readonly string strCuiFilePath = Path.Combine(
+            Path.GetTempPath(),
+            @"CADAddinManager\AddInManagerByFT.cuix"
+        );
+
         /// <summary>
         /// 创建UI
         /// </summary>
@@ -31,9 +42,6 @@ namespace CADAddinManagerDemo
                 //这里可以写文件路径或者仅写文件名
                 //如果仅写文件名，则最后保存时将默认保存在此程序集DLL所在目录
                 //如果写文件路径，则会按路径进行保存
-                string projectPath =
-                    "E:\\★★★AUTOCAD.NET\\CAD2024\\CAD插件加载\\CADAddinManagerDemo\\bin\\Debug";
-                string strCuiFileName = Path.Combine(projectPath, "AddInManagerByFT.cui");
 
                 //创建一个自定义组（这个组中将包含我们自定义的命令、菜单、工具栏、面板等）
                 CustomizationSection myCSection = new CustomizationSection();
@@ -66,7 +74,7 @@ namespace CADAddinManagerDemo
                 );
 
                 // 最后保存文件
-                myCSection.SaveAs(strCuiFileName);
+                myCSection.SaveAs(strCuiFilePath);
             }
             catch (System.Exception ex)
             {
@@ -80,5 +88,19 @@ namespace CADAddinManagerDemo
             MainView mainView = new MainView();
             mainView.Show();
         }
+
+        [CommandMethod("InitAddIn")]
+        public void InitializeAddIn()
+        {
+            BuildMyPopMenu();
+            //加载ui
+            Application.LoadPartialMenu(strCuiFilePath);
+            //刷新
+            Application.ReloadAllMenus();
+            MessageBox.Show("初始化成功！");
+            ShowAddInManager();
+        }
+
+        
     }
 }
