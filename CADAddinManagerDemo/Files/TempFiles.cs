@@ -43,10 +43,6 @@ namespace CADAddinManagerDemo.Files
 
         public void TempFilesSave()
         {
-            if (AddinsTempFiles.Count == 0)
-            {
-                return;
-            }
             var list = AddinsTempFiles.Distinct().ToList();
             string folderPath = Path.GetTempPath();
             string filePath = Path.Combine(folderPath, pathFile);
@@ -65,10 +61,6 @@ namespace CADAddinManagerDemo.Files
                 {
                     foreach (string line in list)
                     {
-                        if (string.IsNullOrEmpty(line))
-                        {
-                            continue;
-                        }
                         writer.WriteLine(line);
                     }
                 }
