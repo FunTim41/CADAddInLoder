@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -73,6 +74,7 @@ namespace CADAddinManagerDemo.ViewModels
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
+                return;
             }
         }
 
@@ -237,8 +239,10 @@ namespace CADAddinManagerDemo.ViewModels
         /// </summary>
         private void LoadPath()
         {
+            
             try
             {
+               
                 var files = TempFiles.Instance.AddinsTempFiles;
                 foreach (var file in files)
                 {
@@ -248,9 +252,10 @@ namespace CADAddinManagerDemo.ViewModels
             }
             catch (Exception ex)
             {
-                // MessageBox.Show("An error occurred: " + ex.Message);
+                MessageBox.Show("An error occurred: " + ex.Message);
                 return;
             }
+          
         }
     }
 }
