@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -85,8 +86,15 @@ namespace CADAddinManagerDemo
         [CommandMethod("ShowAddInManager")]
         public void ShowAddInManager()
         {
-            MainView mainView = new MainView();
-            mainView.Show();
+            try
+            {
+                MainView mainView = new MainView();
+                mainView.Show();
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show(ex.ToString(),"加载窗口失败");
+            }
         }
 
         [CommandMethod("InitAddIn")]
@@ -94,23 +102,18 @@ namespace CADAddinManagerDemo
         {
             try
             {
-
-           
-            BuildMyPopMenu();
-            //加载ui
-            Application.LoadPartialMenu(strCuiFilePath);
-            //刷新
-            Application.ReloadAllMenus();
-            MessageBox.Show("初始化成功！");
-            ShowAddInManager();
+                BuildMyPopMenu();
+                //加载ui
+                Application.LoadPartialMenu(strCuiFilePath);
+                //刷新
+                Application.ReloadAllMenus();
+                MessageBox.Show("初始化成功！");
+                ShowAddInManager();
             }
             catch (System.Exception ex)
             {
-
-                MessageBox.Show(ex.ToString());
+                MessageBox.Show(ex.ToString(), "初始化失败");
             }
         }
-
-        
     }
 }

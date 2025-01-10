@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -81,46 +82,58 @@ namespace CADAddinManagerDemo
         /// <param name="Oripath"></param>
         public static void CopyToTempByOripath(string Oripath)
         {
-            // 获取用户临时文件夹路径
-            string userTempPath = System.IO.Path.GetTempPath();
+            
+            try
+            {
+               
+                // 获取用户临时文件夹路径
+                string userTempPath = System.IO.Path.GetTempPath();
 
-            // 新建CADAddinManager文件夹路径
-            string newFolderPath = Path.Combine(userTempPath, "CADAddinManager");
-            // 在临时文件夹下创建CADAddinManager文件夹
-            if (!Directory.Exists(newFolderPath))
-            {
-                Directory.CreateDirectory(newFolderPath);
-            }
-
-            //CAD插件路径
-            addInOriginalPath = Oripath;
-            //插件全名
-            var Dllfilename = Path.GetFileName(AddInOriginalPath);
-            var Dllname = Path.GetFileNameWithoutExtension(Dllfilename);
-            // 获取dll文件的原目录路径
-            string OriginalPath = Path.GetDirectoryName(AddInOriginalPath);
-            //为每个Dll插件创建单独项目文件夹
-            string targetFolderPath = Path.Combine(newFolderPath, Dllname);
-            // 检查目标文件夹是否存在，如果不存在则创建
-            if (!Directory.Exists(targetFolderPath))
-            {
-                Directory.CreateDirectory(targetFolderPath);
-            }
-            ClearFolder(targetFolderPath);
-            // 获取原dll路径下的所有文件
-            string[] files = Directory.GetFiles(OriginalPath);
-            // 复制文件到临时文件夹
-            foreach (string file in files)
-            {
-                string fileName = Path.GetFileName(file);
-                string destFile = Path.Combine(targetFolderPath, fileName);
-                File.Copy(file, destFile, true);
-                if (fileName == Dllfilename)
+                // 新建CADAddinManager文件夹路径
+                string newFolderPath = Path.Combine(userTempPath, "CADAddinManager");
+                // 在临时文件夹下创建CADAddinManager文件夹
+                if (!Directory.Exists(newFolderPath))
                 {
-                    addInTempPath = Path.Combine(targetFolderPath, fileName);
+                    Directory.CreateDirectory(newFolderPath);
+                }
+
+                //CAD插件路径
+                addInOriginalPath = Oripath;
+                //插件全名
+                var Dllfilename = Path.GetFileName(AddInOriginalPath);
+                var Dllname = Path.GetFileNameWithoutExtension(Dllfilename);
+                // 获取dll文件的原目录路径
+                string OriginalPath = Path.GetDirectoryName(AddInOriginalPath);
+                //为每个Dll插件创建单独项目文件夹
+                string targetFolderPath = Path.Combine(newFolderPath, Dllname);
+                // 检查目标文件夹是否存在，如果不存在则创建
+                if (!Directory.Exists(targetFolderPath))
+                {
+                    Directory.CreateDirectory(targetFolderPath);
+                }
+                ClearFolder(targetFolderPath);
+                // 获取原dll路径下的所有文件
+                string[] files = Directory.GetFiles(OriginalPath);
+                // 复制文件到临时文件夹
+                foreach (string file in files)
+                {
+                    string fileName = Path.GetFileName(file);
+                    string destFile = Path.Combine(targetFolderPath, fileName);
+                    
+                    if (fileName == Dllfilename)
+                    {
+                        File.Copy(file, destFile, true);
+                        addInTempPath = Path.Combine(targetFolderPath, fileName);
+                        break;
+                    }
                 }
             }
-        }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "复制文件到临时文件夹失败");
+                return;
+            }
+            }
 
         /// <summary>
         /// 清空文件夹

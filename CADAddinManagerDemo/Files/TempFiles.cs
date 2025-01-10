@@ -43,6 +43,7 @@ namespace CADAddinManagerDemo.Files
 
         public void TempFilesSave()
         {
+           
             var list = AddinsTempFiles.Distinct().ToList();
             string folderPath = Path.GetTempPath();
             string filePath = Path.Combine(folderPath, pathFile);
@@ -61,6 +62,7 @@ namespace CADAddinManagerDemo.Files
                 {
                     foreach (string line in list)
                     {
+                       
                         writer.WriteLine(line);
                     }
                 }
@@ -87,13 +89,14 @@ namespace CADAddinManagerDemo.Files
                         list.Add(line);
                     }
                 }
-
+                
+                list.RemoveAll(i => i.Contains("CADAddinManagerDemo"));
                 // 读取文件的所有行并存储到List中
                 AddinsTempFiles = list;
             }
             catch (Exception ex)
             {
-                //MessageBox.Show("An error occurred: " + ex.Message);
+                MessageBox.Show("启动前加载失败: " + ex.Message);
                 return;
             }
         }
