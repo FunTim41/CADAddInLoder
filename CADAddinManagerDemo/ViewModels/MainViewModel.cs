@@ -11,11 +11,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Forms;
+using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.Customization;
 using CADAddinManagerDemo.Files;
 using CADAddinManagerDemo.TreeViewInfo;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Application = Autodesk.AutoCAD.ApplicationServices.Application;
 
 namespace CADAddinManagerDemo.ViewModels
 {
@@ -213,12 +215,21 @@ namespace CADAddinManagerDemo.ViewModels
                 var targetMethod = targetType.GetMethod(CurrentCommand.Name);
                 var targetObject = Activator.CreateInstance(targetType);
                 cmd = () => targetMethod.Invoke(targetObject, null);
-
-                cmd?.Invoke();
+                using (
+                    DocumentLock docLock =
+                        Application.DocumentManager.MdiActiveDocument.LockDocument()
+                )
+                {
+                    cmd?.Invoke();
+                    // Redraw the drawing
+                    Application.UpdateScreen();
+                    //Application.DocumentManager.MdiActiveDocument.Editor.UpdateScreen();
+                    //Application.DocumentManager.MdiActiveDocument.Editor.Regen();
+                }
             }
             catch (System.Exception ex)
             {
-                MessageBox.Show(ex.ToString(), "Tips");
+                MessageBox.Show(ex.ToString(), "命令执行失败");
                 return;
             }
         }
@@ -247,13 +258,11 @@ namespace CADAddinManagerDemo.ViewModels
                 foreach (var file in files)
                 {
                     currentfile = file;
-                    
-                    
+
                     LoadHelper.CopyToTempByOripath(currentfile);
                     LoadAddinToTreeView();
                 }
             }
-           
             catch (Exception ex)
             {
                 MessageBox.Show("An error occurred: " + ex.Message);
