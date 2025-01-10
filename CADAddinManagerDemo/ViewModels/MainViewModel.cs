@@ -219,6 +219,7 @@ namespace CADAddinManagerDemo.ViewModels
             catch (System.Exception ex)
             {
                 MessageBox.Show(ex.ToString(), "Tips");
+                return;
             }
         }
 
@@ -239,23 +240,27 @@ namespace CADAddinManagerDemo.ViewModels
         /// </summary>
         private void LoadPath()
         {
-            
+            string currentfile = null;
             try
             {
-               
                 var files = TempFiles.Instance.AddinsTempFiles;
                 foreach (var file in files)
                 {
-                    LoadHelper.CopyToTempByOripath(file);
+                    currentfile = file;
+                    
+                    
+                    LoadHelper.CopyToTempByOripath(currentfile);
                     LoadAddinToTreeView();
                 }
             }
+           
             catch (Exception ex)
             {
                 MessageBox.Show("An error occurred: " + ex.Message);
+                if (currentfile != null)
+                    TempFiles.Instance.AddinsTempFiles.Remove(currentfile);
                 return;
             }
-          
         }
     }
 }

@@ -82,10 +82,10 @@ namespace CADAddinManagerDemo
         /// <param name="Oripath"></param>
         public static void CopyToTempByOripath(string Oripath)
         {
-            Stopwatch stopwatch = new();
+            
             try
             {
-                stopwatch.Start();
+               
                 // 获取用户临时文件夹路径
                 string userTempPath = System.IO.Path.GetTempPath();
 
@@ -119,10 +119,12 @@ namespace CADAddinManagerDemo
                 {
                     string fileName = Path.GetFileName(file);
                     string destFile = Path.Combine(targetFolderPath, fileName);
-                    File.Copy(file, destFile, true);
+                    
                     if (fileName == Dllfilename)
                     {
+                        File.Copy(file, destFile, true);
                         addInTempPath = Path.Combine(targetFolderPath, fileName);
+                        break;
                     }
                 }
             }
@@ -131,8 +133,7 @@ namespace CADAddinManagerDemo
                 MessageBox.Show(ex.ToString(), "复制文件到临时文件夹失败");
                 return;
             }
-            finally { stopwatch.Stop(); MessageBox.Show(stopwatch.ElapsedMilliseconds.ToString()); }
-        }
+            }
 
         /// <summary>
         /// 清空文件夹

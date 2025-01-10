@@ -93,7 +93,7 @@ namespace CADAddinManagerDemo
             }
             catch (System.Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                MessageBox.Show(ex.ToString(),"加载窗口失败");
             }
         }
 
@@ -112,7 +112,7 @@ namespace CADAddinManagerDemo
             }
             catch (System.Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                MessageBox.Show(ex.ToString(), "初始化失败");
             }
         }
     }

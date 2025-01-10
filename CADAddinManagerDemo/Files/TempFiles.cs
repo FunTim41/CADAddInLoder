@@ -89,7 +89,8 @@ namespace CADAddinManagerDemo.Files
                         list.Add(line);
                     }
                 }
-
+                
+                list.RemoveAll(i => i.Contains("CADAddinManagerDemo"));
                 // 读取文件的所有行并存储到List中
                 AddinsTempFiles = list;
             }
