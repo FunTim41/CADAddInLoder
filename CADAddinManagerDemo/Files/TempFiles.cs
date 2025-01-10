@@ -73,26 +73,28 @@ namespace CADAddinManagerDemo.Files
                 return;
             }
         }
-
+        /// <summary>
+        /// 载入上次的地址
+        /// </summary>
         public void TempFilesLoad()
         {
             try
             {
                 string filePath = Path.Combine(Path.GetTempPath(), pathFile);
-                List<string> list = new List<string>();
+                List<string> lists = new List<string>();
 
                 using (StreamReader sr = new StreamReader(filePath))
                 {
                     string line;
                     while ((line = sr.ReadLine()) != null)
                     {
-                        list.Add(line);
+                        lists.Add(line);
                     }
                 }
                 
-                list.RemoveAll(i => i.Contains("CADAddinManagerDemo"));
+                lists.RemoveAll(i => i.Contains("CADAddinManagerDemo"));
                 // 读取文件的所有行并存储到List中
-                AddinsTempFiles = list;
+                AddinsTempFiles = lists;
             }
             catch (Exception ex)
             {

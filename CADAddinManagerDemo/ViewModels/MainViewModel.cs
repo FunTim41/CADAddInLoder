@@ -98,7 +98,7 @@ namespace CADAddinManagerDemo.ViewModels
                 CommandTree command = Commands.First(i =>
                     i.Name == Path.GetFileName(addInTempPath)
                 );
-                CreateTree(commandTree, originalPath);
+                CreateTree(command, originalPath);
             }
             else
             {
@@ -251,25 +251,38 @@ namespace CADAddinManagerDemo.ViewModels
         /// </summary>
         private void LoadPath()
         {
-            string currentfile = null;
+            bool existsfile = false;
+            
             try
             {
-                var files = TempFiles.Instance.AddinsTempFiles;
+                List<string> files = new List<string>();
+                files.AddRange(TempFiles.Instance.AddinsTempFiles);
                 foreach (var file in files)
                 {
-                    currentfile = file;
-
-                    LoadHelper.CopyToTempByOripath(currentfile);
-                    LoadAddinToTreeView();
+                   
+                    //判断给定地址是否存在
+                    if (File.Exists(file))
+                    {
+                        existsfile = true;
+                        LoadHelper.CopyToTempByOripath(file);
+                        LoadAddinToTreeView();
+                    }
+                    else
+                    {
+                        TempFiles.Instance.AddinsTempFiles.Remove(file);
+                    } 
+                       
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("An error occurred: " + ex.Message);
-                if (currentfile != null)
-                    TempFiles.Instance.AddinsTempFiles.Remove(currentfile);
+
                 return;
             }
+            
+                
+            
         }
     }
 }
