@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Autodesk.AutoCAD.Runtime;
+using CADAddinManagerDemo.Files;
 using CADAddinManagerDemo.TreeViewInfo;
 
 namespace CADAddinManagerDemo
@@ -173,6 +174,10 @@ namespace CADAddinManagerDemo
             string name
         )
         {
+            try
+            {
+
+            
             var tempAssembly = Assembly.Load(File.ReadAllBytes(tempPath));
             if (addInsDll.Contains(tempAssembly))
             { //把旧的移除
@@ -204,6 +209,13 @@ namespace CADAddinManagerDemo
             }
 
             return methods;
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "反射程序集失败");
+                TempFiles.Instance.AddinsTempFiles.Remove(AddInOriginalPath);
+                return null;
+            }
         }
     }
 }

@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Forms;
@@ -221,10 +222,11 @@ namespace CADAddinManagerDemo.ViewModels
                 )
                 {
                     cmd?.Invoke();
+
                     // Redraw the drawing
                     Application.UpdateScreen();
-                    //Application.DocumentManager.MdiActiveDocument.Editor.UpdateScreen();
-                    //Application.DocumentManager.MdiActiveDocument.Editor.Regen();
+                    Application.DocumentManager.MdiActiveDocument.Editor.UpdateScreen();
+                    Application.DocumentManager.MdiActiveDocument.Editor.Regen();
                 }
             }
             catch (System.Exception ex)
@@ -251,27 +253,22 @@ namespace CADAddinManagerDemo.ViewModels
         /// </summary>
         private void LoadPath()
         {
-            bool existsfile = false;
-            
             try
             {
                 List<string> files = new List<string>();
                 files.AddRange(TempFiles.Instance.AddinsTempFiles);
                 foreach (var file in files)
                 {
-                   
                     //判断给定地址是否存在
                     if (File.Exists(file))
                     {
-                        existsfile = true;
                         LoadHelper.CopyToTempByOripath(file);
                         LoadAddinToTreeView();
                     }
                     else
                     {
                         TempFiles.Instance.AddinsTempFiles.Remove(file);
-                    } 
-                       
+                    }
                 }
             }
             catch (Exception ex)
@@ -280,9 +277,6 @@ namespace CADAddinManagerDemo.ViewModels
 
                 return;
             }
-            
-                
-            
         }
     }
 }
