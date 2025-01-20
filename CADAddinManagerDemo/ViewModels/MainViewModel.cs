@@ -47,7 +47,7 @@ namespace CADAddinManagerDemo.ViewModels
         [ObservableProperty]
         CommandTree currentAddinDll;
 
-        List<CommandTree> Commands = new();
+        ObservableCollection<CommandTree> Commands = new();
 
         [ObservableProperty]
         ICollectionView commandsTrees;
@@ -86,6 +86,14 @@ namespace CADAddinManagerDemo.ViewModels
             CommandTree commandTree = new CommandTree();
             string originalPath = LoadHelper.AddInOriginalPath;
             addInTempPath = LoadHelper.AddInTempPath;
+            bool isexist = false;
+            foreach (var item in Commands)
+            {
+                if (item.Name == Path.GetFileName(addInTempPath))
+                {
+                    isexist = true; break;
+                }
+            }
             if (!TempFiles.Instance.AddinsTempFiles.Exists(i => i == originalPath))
             { //如果不存在该地址
                 TempFiles.Instance.AddinsTempFiles.Add(originalPath);
@@ -94,8 +102,8 @@ namespace CADAddinManagerDemo.ViewModels
             {
                 Commands.Add(CreateTree(commandTree, originalPath));
             }
-            else if (Commands.Exists(i => i.Name == Path.GetFileName(addInTempPath)))
-            {
+            else if (isexist)
+            {//如果当前dll已经加载过至少一次，则更新子节点
                 CommandTree command = Commands.First(i =>
                     i.Name == Path.GetFileName(addInTempPath)
                 );
@@ -152,7 +160,7 @@ namespace CADAddinManagerDemo.ViewModels
                         TempFiles.Instance.AddinsTempFiles.Remove(CurrentAddinDll.OriPath);
                     }
                 }
-                CommandsTrees.Refresh();
+               
             }
             catch (Exception ex)
             {
