@@ -156,9 +156,10 @@ namespace CADAddinManagerDemo.ViewModels
                     CurrentAddinDll.CommandMethodNames.Remove(CurrentCommand);
                     if (CurrentAddinDll.CommandMethodNames.Count == 0)
                     {
+                        TempFiles.Instance.AddinsTempFiles.Remove(CurrentAddinDll.OriPath);
                         Commands.Remove(CurrentAddinDll);
 
-                        TempFiles.Instance.AddinsTempFiles.Remove(CurrentAddinDll.OriPath);
+                        
                     }
                 }
                

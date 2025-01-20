@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using Autodesk.AutoCAD.Runtime;
 
 namespace HelloCad
@@ -13,8 +8,15 @@ namespace HelloCad
         [CommandMethod("HelloCAD")]
         public void NewCommand()
         {
-           
-            MessageBox.Show("Hello,CAD！！！");
+            try
+            {
+                MessageBox.Show("Hello,World！！！");
+                throw new System.Exception("get exception");
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

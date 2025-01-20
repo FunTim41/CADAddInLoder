@@ -66,21 +66,21 @@
                 VerticalScrollBarVisibility="Auto" />
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                 <Button
-                    Width="80"
+                    Width="85"
                     Height="35"
                     Margin="5,10,5,5"
                     Command="{Binding RunMethodCommand}"
                     Content="Run"
                     FontSize="16" />
                 <Button
-                    Width="80"
+                    Width="85"
                     Height="35"
                     Margin="5"
                     Command="{Binding LoadAddinCommand}"
                     Content="Load"
                     FontSize="16" />
                 <Button
-                    Width="80"
+                    Width="85"
                     Height="35"
                     Margin="5"
                     Command="{Binding RemoveAddinCommand}"
