@@ -83,10 +83,8 @@ namespace CADAddinManagerDemo
         /// <param name="Oripath"></param>
         public static void CopyToTempByOripath(string Oripath)
         {
-            
             try
             {
-               
                 // 获取用户临时文件夹路径
                 string userTempPath = System.IO.Path.GetTempPath();
 
@@ -120,12 +118,14 @@ namespace CADAddinManagerDemo
                 {
                     string fileName = Path.GetFileName(file);
                     string destFile = Path.Combine(targetFolderPath, fileName);
-                    
                     if (fileName == Dllfilename)
                     {
+                        addInTempPath = destFile;
+                    }
+
+                    if (fileName.Contains(Dllname))
+                    {
                         File.Copy(file, destFile, true);
-                        addInTempPath = Path.Combine(targetFolderPath, fileName);
-                        break;
                     }
                 }
             }
@@ -134,7 +134,7 @@ namespace CADAddinManagerDemo
                 MessageBox.Show(ex.ToString(), "复制文件到临时文件夹失败");
                 return;
             }
-            }
+        }
 
         /// <summary>
         /// 清空文件夹
@@ -176,39 +176,44 @@ namespace CADAddinManagerDemo
         {
             try
             {
-
-            
-            var tempAssembly = Assembly.Load(File.ReadAllBytes(tempPath));
-            if (addInsDll.Contains(tempAssembly))
-            { //把旧的移除
-                addInsDll.Remove(tempAssembly);
-            }
-            addInsDll.Add(tempAssembly);
-            Type attributeType = typeof(CommandMethodAttribute);
-            List<MethodInfo> methodsWithAttribute = new List<MethodInfo>();
-            ObservableCollection<MethodTree> methods = new ObservableCollection<MethodTree>();
-            // 遍历所有类型
-            foreach (Type type in tempAssembly.GetTypes())
-            {
-                // 获取所有方法
-                methodsWithAttribute = type.GetMethods().ToList();
-                foreach (MethodInfo dllmethod in methodsWithAttribute)
-                { // 检查方法是否具有指定特性
-                    if (dllmethod.GetCustomAttribute(typeof(CommandMethodAttribute)) != null)
-                    { //得到方法名，所属的类名
-                        MethodTree method = new MethodTree();
-                        method.Name = dllmethod.Name;
-                        method.ClassName =
-                            dllmethod.DeclaringType.Namespace + "." + dllmethod.DeclaringType.Name;
-                        method.DllName = name;
-                        method.tempPath = tempPath;
-                        method.assembly = tempAssembly;
-                        methods.Add(method);
+                string pdbname = Path.GetFileNameWithoutExtension(tempPath) + ".pdb";
+                string padPath = Path.GetDirectoryName(tempPath);
+                var tempAssembly = Assembly.Load(
+                    File.ReadAllBytes(tempPath),
+                    File.ReadAllBytes(Path.Combine(padPath, pdbname))
+                );
+                if (addInsDll.Contains(tempAssembly))
+                { //把旧的移除
+                    addInsDll.Remove(tempAssembly);
+                }
+                addInsDll.Add(tempAssembly);
+                Type attributeType = typeof(CommandMethodAttribute);
+                List<MethodInfo> methodsWithAttribute = new List<MethodInfo>();
+                ObservableCollection<MethodTree> methods = new ObservableCollection<MethodTree>();
+                // 遍历所有类型
+                foreach (Type type in tempAssembly.GetTypes())
+                {
+                    // 获取所有方法
+                    methodsWithAttribute = type.GetMethods().ToList();
+                    foreach (MethodInfo dllmethod in methodsWithAttribute)
+                    { // 检查方法是否具有指定特性
+                        if (dllmethod.GetCustomAttribute(typeof(CommandMethodAttribute)) != null)
+                        { //得到方法名，所属的类名
+                            MethodTree method = new MethodTree();
+                            method.Name = dllmethod.Name;
+                            method.ClassName =
+                                dllmethod.DeclaringType.Namespace
+                                + "."
+                                + dllmethod.DeclaringType.Name;
+                            method.DllName = name;
+                            method.tempPath = tempPath;
+                            method.assembly = tempAssembly;
+                            methods.Add(method);
+                        }
                     }
                 }
-            }
 
-            return methods;
+                return methods;
             }
             catch (System.Exception ex)
             {

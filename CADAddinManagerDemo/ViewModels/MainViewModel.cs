@@ -86,6 +86,10 @@ namespace CADAddinManagerDemo.ViewModels
             CommandTree commandTree = new CommandTree();
             string originalPath = LoadHelper.AddInOriginalPath;
             addInTempPath = LoadHelper.AddInTempPath;
+            if (!Path.GetFileName(addInTempPath).Contains(".dll"))
+            {
+                return;
+            }
             bool isexist = false;
             foreach (var item in Commands)
             {
