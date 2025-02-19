@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Shell;
 using Autodesk.AutoCAD.Runtime;
 using CADAddinManagerDemo.Files;
 using CADAddinManagerDemo.TreeViewInfo;
@@ -35,6 +36,9 @@ namespace CADAddinManagerDemo
             get { return addInOriginalPath; }
         }
 
+        /// <summary>
+        /// 已加载的Dll合集
+        /// </summary>
         private static List<Assembly> addInsDll = new();
 
         /// <summary>
@@ -124,11 +128,21 @@ namespace CADAddinManagerDemo
                     }
 
                     if (fileName.Contains(Dllname))
+                    { //复制到临时文件夹中的对于dll文件夹
+                        File.Copy(file, destFile, true);
+                    }
+                    //直接加载其余被应用的dll
+                    else
                     {
                         File.Copy(file, destFile, true);
+                        if (fileName.Contains(".dll"))
+                        {
+                            Assembly.UnsafeLoadFrom(destFile);
+                        }
                     }
                 }
             }
+            catch (System.IO.IOException) { }
             catch (System.Exception ex)
             {
                 MessageBox.Show(ex.ToString(), "复制文件到临时文件夹失败");
@@ -156,6 +170,7 @@ namespace CADAddinManagerDemo
                     Directory.Delete(subFolder, true);
                 }
             }
+            catch (System.UnauthorizedAccessException) { }
             catch (System.Exception ex)
             {
                 MessageBox.Show(ex.ToString());
