@@ -33,6 +33,7 @@ namespace CADAddinManagerDemo.Files
         private TempFiles()
         {
             AddinsTempFiles = new List<string>();
+            
             TempFilesLoad();
         }
 
