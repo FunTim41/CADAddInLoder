@@ -95,7 +95,8 @@ namespace CADAddinManagerDemo.ViewModels
             {
                 if (item.Name == Path.GetFileName(addInTempPath))
                 {
-                    isexist = true; break;
+                    isexist = true;
+                    break;
                 }
             }
             if (!TempFiles.Instance.AddinsTempFiles.Exists(i => i == originalPath))
@@ -107,10 +108,8 @@ namespace CADAddinManagerDemo.ViewModels
                 Commands.Add(CreateTree(commandTree, originalPath));
             }
             else if (isexist)
-            {//如果当前dll已经加载过至少一次，则更新子节点
-                CommandTree command = Commands.First(i =>
-                    i.Name == Path.GetFileName(addInTempPath)
-                );
+            { //如果当前dll已经加载过至少一次，则更新子节点
+                CommandTree command = Commands.First(i => i.Name == Path.GetFileName(addInTempPath));
                 CreateTree(command, originalPath);
             }
             else
@@ -153,7 +152,6 @@ namespace CADAddinManagerDemo.ViewModels
                 {
                     TempFiles.Instance.AddinsTempFiles.Remove(CurrentAddinDll.OriPath);
                     Commands.Remove(CurrentAddinDll);
-                    
                 }
                 else
                 {
@@ -162,15 +160,12 @@ namespace CADAddinManagerDemo.ViewModels
                     {
                         TempFiles.Instance.AddinsTempFiles.Remove(CurrentAddinDll.OriPath);
                         Commands.Remove(CurrentAddinDll);
-
-                        
                     }
                 }
-               
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString(),"Tip");
+                MessageBox.Show(ex.ToString(), "Tip");
                 return;
             }
         }
@@ -249,7 +244,7 @@ namespace CADAddinManagerDemo.ViewModels
                 return;
             }
         }
-
+        
         /// <summary>
         /// 在关闭前保存当前以加载的dll的地址
         /// </summary>
@@ -260,6 +255,8 @@ namespace CADAddinManagerDemo.ViewModels
             string filePath = Path.Combine(folderPath, "CADAddinManager");
             LoadHelper.ClearFolder(filePath);
             TempFiles.Instance.TempFilesSave();
+           
+            
         }
 
         /// <summary>
@@ -269,6 +266,9 @@ namespace CADAddinManagerDemo.ViewModels
         {
             try
             {
+                string folderPath = Path.GetTempPath();
+                string filePath = Path.Combine(folderPath, "CADAddinManager");
+                LoadHelper.ClearFolder(filePath);
                 List<string> files = new List<string>();
                 files.AddRange(TempFiles.Instance.AddinsTempFiles);
                 foreach (var file in files)

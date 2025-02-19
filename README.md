@@ -15,8 +15,7 @@
 (command"netload" "Dll所在文件夹\\CADAddinManagerDemo.dll")
 ```
 
-2、把“Reference”文件夹下“引用文件”中的内容复制到cad根目录中，启动CAD后用“InitAddin”进行初始化，成功后菜单栏会显示“插件管理”UI及显示上图界面。
+2、启动CAD后用“InitAddin”进行初始化，成功后菜单栏会显示“插件管理”UI及显示上图界面。
 
 3、下次运行可通过菜单栏添加“插件管理”UI或者“ShowAddInManager”进入。
-
 
