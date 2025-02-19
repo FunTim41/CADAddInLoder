@@ -98,6 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Command.cs" />
+    <Compile Include="ExApp.cs" />
     <Compile Include="Files\LoadHelper.cs" />
     <Compile Include="Files\TempFiles.cs" />
     <Compile Include="TreeViewInfo\CommandTree.cs" />

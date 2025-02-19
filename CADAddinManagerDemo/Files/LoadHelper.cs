@@ -123,11 +123,16 @@ namespace CADAddinManagerDemo
                         addInTempPath = destFile;
                     }
 
-                    if (fileName.Contains(Dllname))
-                    {
-                        File.Copy(file, destFile, true);
-                    }
+                    //if (fileName.Contains(Dllname))
+                    //{
+                    //    File.Copy(file, destFile, true);
+                //}
+                //加载所有dll和pdb文件
+                if (file.Contains(".dll")|| file.Contains(".pdb"))
+                {
+                    File.Copy(file, destFile, true);
                 }
+            }
             }
             catch (System.Exception ex)
             {

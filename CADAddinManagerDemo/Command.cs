@@ -1,21 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using Autodesk.AutoCAD.ApplicationServices;
-using Autodesk.AutoCAD.Customization;
-using Autodesk.AutoCAD.DatabaseServices;
-using Autodesk.AutoCAD.EditorInput;
-using Autodesk.AutoCAD.Geometry;
+﻿using Autodesk.AutoCAD.Customization;
 using Autodesk.AutoCAD.Runtime;
-using HandyControl.Controls;
+using System.Collections.Specialized;
+using System.IO;
 using Application = Autodesk.AutoCAD.ApplicationServices.Application;
 using MessageBox = System.Windows.MessageBox;
 
