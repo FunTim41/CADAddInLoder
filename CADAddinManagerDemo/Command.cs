@@ -1,7 +1,7 @@
-﻿using Autodesk.AutoCAD.Customization;
-using Autodesk.AutoCAD.Runtime;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.IO;
+using Autodesk.AutoCAD.Customization;
+using Autodesk.AutoCAD.Runtime;
 using Application = Autodesk.AutoCAD.ApplicationServices.Application;
 using MessageBox = System.Windows.MessageBox;
 
@@ -13,6 +13,7 @@ namespace CADAddinManagerDemo
             Path.GetTempPath(),
             @"CADAddinManager\AddInManagerByFT.cuix"
         );
+        public static MainView mainView;
 
         /// <summary>
         /// 创建UI
@@ -74,12 +75,16 @@ namespace CADAddinManagerDemo
         {
             try
             {
-                MainView mainView = new MainView();
+                if (mainView != null)
+                {
+                    return;
+                }
+                mainView = new MainView();
                 mainView.Show();
             }
             catch (System.Exception ex)
             {
-                MessageBox.Show(ex.ToString(),"加载窗口失败");
+                MessageBox.Show(ex.ToString(), "加载窗口失败");
             }
         }
 

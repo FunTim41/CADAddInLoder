@@ -255,8 +255,8 @@ namespace CADAddinManagerDemo.ViewModels
             string filePath = Path.Combine(folderPath, "CADAddinManager");
             LoadHelper.ClearFolder(filePath);
             TempFiles.Instance.TempFilesSave();
-           
-            
+
+            Command.mainView = null;
         }
 
         /// <summary>
