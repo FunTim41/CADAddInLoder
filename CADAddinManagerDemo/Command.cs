@@ -1,9 +1,11 @@
 ﻿using System.Collections.Specialized;
 using System.IO;
+using System.Windows.Shapes;
 using Autodesk.AutoCAD.Customization;
 using Autodesk.AutoCAD.Runtime;
 using Application = Autodesk.AutoCAD.ApplicationServices.Application;
 using MessageBox = System.Windows.MessageBox;
+using Path = System.IO.Path;
 
 namespace CADAddinManagerDemo
 {
@@ -64,9 +66,20 @@ namespace CADAddinManagerDemo
                 // 最后保存文件
                 myCSection.SaveAs(strCuiFilePath);
             }
+            catch (FileSaveException)
+            {
+                // 创建 DirectoryInfo 对象
+                DirectoryInfo directoryInfo = new DirectoryInfo(
+                    Path.Combine(Path.GetTempPath(), "CADAddinManager")
+                );
+
+                // 创建目录
+                directoryInfo.Create();
+                BuildMyPopMenu();
+            }
             catch (System.Exception ex)
             {
-                throw new System.Exception("自定义CAD菜单失败：" + ex.Message);
+                MessageBox.Show("自定义CAD菜单失败：" + ex);
             }
         }
 

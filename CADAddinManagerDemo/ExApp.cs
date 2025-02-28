@@ -9,6 +9,7 @@ using System.Windows;
 using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.Customization;
 using Autodesk.AutoCAD.Runtime;
+using Application = Autodesk.AutoCAD.ApplicationServices.Application;
 namespace CADAddinManagerDemo
 {
     public class ExApp : IExtensionApplication
@@ -16,7 +17,18 @@ namespace CADAddinManagerDemo
        
         public void Initialize()
         {
+            
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+            Application.Idle += Application_Idle; }
+
+        private void Application_Idle(object sender, EventArgs e)
+        {
+           var doc=Application.DocumentManager.MdiActiveDocument; ;
+            if (null!=doc)
+            {
+                Application.Idle -= Application_Idle;
+                doc.Editor.WriteMessage("AddinManager Loaded");
+            }
         }
 
         private Assembly? CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
