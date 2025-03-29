@@ -29,8 +29,8 @@ namespace CADAddinManagerDemo.TreeViewInfo
     {
         public string Name { get; set; }
         public string DllName { get; set; }
-        public string ClassName { get; set; }
-        public string tempPath { get; set; }
-        public Assembly assembly { get; set; }
+       // public string ClassName { get; set; }
+        //public string tempPath { get; set; }
+       // public Assembly assembly { get; set; }
     }
 }

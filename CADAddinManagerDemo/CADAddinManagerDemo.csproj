@@ -50,6 +50,14 @@
       <HintPath>F:\CAD2024SDK\ObjectARX_for_AutoCAD_2024_Win_64bit_dlm\inc\AcMgd.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="AcWindows">
+      <HintPath>F:\CAD2024SDK\ObjectARX_for_AutoCAD_2024_Win_64bit_dlm\inc\AcWindows.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AdWindows">
+      <HintPath>F:\CAD2024SDK\ObjectARX_for_AutoCAD_2024_Win_64bit_dlm\inc\AdWindows.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="CommunityToolkit.Mvvm, Version=8.4.0.0, Culture=neutral, PublicKeyToken=4aff67a105548ee2, processorArchitecture=MSIL">
       <HintPath>..\packages\CommunityToolkit.Mvvm.8.4.0\lib\netstandard2.0\CommunityToolkit.Mvvm.dll</HintPath>
     </Reference>
@@ -120,6 +128,9 @@
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\CommunityToolkit.Mvvm.8.4.0\analyzers\dotnet\roslyn4.3\cs\CommunityToolkit.Mvvm.SourceGenerators.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ico\demo2.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\CommunityToolkit.Mvvm.8.4.0\build\CommunityToolkit.Mvvm.targets" Condition="Exists('..\packages\CommunityToolkit.Mvvm.8.4.0\build\CommunityToolkit.Mvvm.targets')" />
