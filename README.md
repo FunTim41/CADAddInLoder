@@ -7,15 +7,7 @@
 
 使用方式：
 
-1、先自动加载：
+1、直接安装，不要改安装地址。
 
-在cad根目录Support文件夹下找到acad2024.lsp。
-
-```
-(command"netload" "Dll所在文件夹\\CADAddinManagerDemo.dll")
-```
-
-2、启动CAD后用“InitAddin”进行初始化，成功后菜单栏会显示“插件管理”UI及显示上图界面。
-
-3、下次运行可通过菜单栏添加“插件管理”UI或者“ShowAddInManager”进入。
+2、可通过附加模块下的“插件管理”中的ribbon UI或者命令“AddInManager”进入。
 
