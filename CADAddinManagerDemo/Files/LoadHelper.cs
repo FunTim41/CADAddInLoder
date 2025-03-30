@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Shell;
 using Autodesk.AutoCAD.Runtime;
 using CADAddinManagerDemo.Files;
 using CADAddinManagerDemo.TreeViewInfo;
@@ -64,7 +60,7 @@ namespace CADAddinManagerDemo
             openFileDialog.Title = "选择插件文件";
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                //移除这个之后再加载这个，就会报无法找到资源。估计是和删除临时文件夹有关
+                //移除这个之后再加载这个，就会报无法找到资源。
                 if (
                     Path.GetFileNameWithoutExtension(openFileDialog.FileName)
                     == "CADAddinManagerDemo"
@@ -165,6 +161,11 @@ namespace CADAddinManagerDemo
 
                 //}
                 // 删除文件夹中的所有子文件夹
+                var paths = Directory.GetDirectories(folderPath);
+                if (paths.Count() == 0 && paths.Any(p => string.IsNullOrEmpty(p)))
+                {
+                    return;
+                }
                 foreach (string subFolder in Directory.GetDirectories(folderPath))
                 {
                     Directory.Delete(subFolder, true);
@@ -193,10 +194,20 @@ namespace CADAddinManagerDemo
             {
                 string pdbname = Path.GetFileNameWithoutExtension(tempPath) + ".pdb";
                 string padPath = Path.GetDirectoryName(tempPath);
-                var tempAssembly = Assembly.Load(
-                    File.ReadAllBytes(tempPath),
-                    File.ReadAllBytes(Path.Combine(padPath, pdbname))
-                );
+                Assembly tempAssembly;
+                var pdbpath = Path.Combine(padPath, pdbname);
+                if (!File.Exists(pdbpath))
+                {
+                    tempAssembly = Assembly.Load(File.ReadAllBytes(tempPath));
+                    MessageBox.Show("当前" + Path.GetFileName(tempPath) + "文件未找到pdb文件，调试时将无法显示报错行号", "Tip");
+                }
+                else
+                {
+                    tempAssembly = Assembly.Load(
+                        File.ReadAllBytes(tempPath),
+                        File.ReadAllBytes(pdbpath)
+                    );
+                }
                 if (addInsDll.Contains(tempAssembly))
                 { //把旧的移除
                     addInsDll.Remove(tempAssembly);
@@ -212,17 +223,23 @@ namespace CADAddinManagerDemo
                     methodsWithAttribute = type.GetMethods().ToList();
                     foreach (MethodInfo dllmethod in methodsWithAttribute)
                     { // 检查方法是否具有指定特性
-                        if (dllmethod.GetCustomAttribute(typeof(CommandMethodAttribute)) != null)
+                        if (
+                            dllmethod.GetCustomAttribute(typeof(CommandMethodAttribute), false)
+                            != null
+                        )
                         { //得到方法名，所属的类名
+                            var att =
+                                dllmethod.GetCustomAttribute(typeof(CommandMethodAttribute), false)
+                                as CommandMethodAttribute;
                             MethodTree method = new MethodTree();
-                            method.Name = dllmethod.Name;
-                            method.ClassName =
-                                dllmethod.DeclaringType.Namespace
-                                + "."
-                                + dllmethod.DeclaringType.Name;
+                            method.Name = att.GlobalName;
+                            // method.ClassName =
+                            //   dllmethod.DeclaringType.Namespace
+                            //   + "."
+                            //   + dllmethod.DeclaringType.Name;
                             method.DllName = name;
-                            method.tempPath = tempPath;
-                            method.assembly = tempAssembly;
+                            //method.tempPath = tempPath;
+                            // method.assembly = tempAssembly;
                             methods.Add(method);
                         }
                     }
